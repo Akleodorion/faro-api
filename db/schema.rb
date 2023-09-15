@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_06_103844) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_15_081043) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,6 +24,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_06_103844) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_standard_ticket"
+    t.integer "standard_ticket_price"
+    t.integer "max_vip_ticket"
+    t.integer "vip_ticket_price"
+    t.integer "max_vvip_ticket"
+    t.integer "vvip_ticket_price"
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
