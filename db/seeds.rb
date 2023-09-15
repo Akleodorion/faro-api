@@ -5,7 +5,47 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+require 'open-uri'
+require 'faker'
+
+file = URI.open('https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/NES-Console-Set.jpg/1200px-NES-Console-Set.jpg')
 Event.destroy_all
-Event.create(name: 'Evenement 1', description: 'Une decription simple et efficace qui fonctionne plutot bien que dire de
-             plus a vrai dire je ne sais pas', date: DateTime.new(2023, 9, 11), location: 'Lille', category: 'loisir',
-             free: false, user_id: 20)
+event = Event.new(name: 'Evenement 1', description: 'Une decription simple et efficace qui fonctionne plutot bien',
+                  date: DateTime.new(2023, 9, 11), location: 'Lille', category: 'loisir', free: false,
+                  max_standard_ticket: 20, standard_ticket_price: 5_000, max_vip_ticket: 15, vip_ticket_price: 10_000,
+                  max_vvip_ticket: 10, vvip_ticket_price: 15_000, user_id: 20)
+event.photo.attach(io: file, filename: 'nes.png', content_type: 'image/png')
+event.photo_url = event.photo.url
+event.save
+
+
+
+
+60.times do
+  random_id = rand(1..250)
+  url = "https://api.jikan.moe/v4/manga/#{random_id}"
+  begin
+    json_data = URI.open(url).read
+    data = JSON.parse(json_data)
+
+    # upload on cloudinary
+    file = URI.open(data['data']['images']['jpg']['small_image_url'])
+
+    # event require name, description, location, category, free or not, ticket pricing ,a user and an picture url.
+    saga = data['data']['titles'][0]['title']
+    picture = data['data']['images']['jpg']['small_image_url']
+    volume = rand(1..data['data']['volumes'].to_i)
+    volume = 1 if data['data']['volumes'].nil?
+
+    event = Event.new(name: 'Evenement 1', description: 'Une decription simple et efficace qui fonctionne plutot bien',
+                      date: Faker::Date.between(from: '2023-09-15', to: '2023-12-31'), location: Faker::Address.city,
+                      category: %w[loisir voyage concert].sample, free: false, max_standard_ticket: 20,
+                      standard_ticket_price: (1..5).to_a.sample * 1000, max_vip_ticket: 15, vip_ticket_price: (10..15).to_a.sample * 1000,
+                      max_vvip_ticket: 10, vvip_ticket_price: (20..25).to_a.sample * 1000, user: User.all.first, photo_url: picture)
+    event.photo.attach(io: file, filename: "#{saga}-#{volume}.jpg", content_type: 'image/jpg')
+    event.save
+    sleep 1
+  rescue OpenURI::HTTPError => error
+    next
+  end
+end

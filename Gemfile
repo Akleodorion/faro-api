@@ -37,8 +37,10 @@ gem "bootsnap", require: false
 gem "rack-cors"
 
 gem 'devise'
+gem 'faker'
 gem 'devise-jwt'
 gem 'jsonapi-serializer'
+gem "cloudinary"
 
 
 group :development, :test do
