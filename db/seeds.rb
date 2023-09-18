@@ -29,11 +29,11 @@ event.save
     data = JSON.parse(json_data)
 
     # upload on cloudinary
-    file = URI.open(data['data']['images']['jpg']['small_image_url'])
+    file = URI.open(data['data']['images']['jpg']['large_image_url'])
 
     # event require name, description, location, category, free or not, ticket pricing ,a user and an picture url.
     saga = data['data']['titles'][0]['title']
-    picture = data['data']['images']['jpg']['small_image_url']
+    picture = data['data']['images']['jpg']['large_image_url']
     volume = rand(1..data['data']['volumes'].to_i)
     volume = 1 if data['data']['volumes'].nil?
 
