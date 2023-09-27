@@ -10,13 +10,7 @@ require 'faker'
 
 file = URI.open('https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/NES-Console-Set.jpg/1200px-NES-Console-Set.jpg')
 Event.destroy_all
-event = Event.new(name: 'Evenement 1', description: 'Une decription simple et efficace qui fonctionne plutot bien',
-                  date: DateTime.new(2023, 9, 11), location: 'Lille', category: 'loisir', free: false,
-                  max_standard_ticket: 20, standard_ticket_price: 5_000, max_vip_ticket: 15, vip_ticket_price: 10_000,
-                  max_vvip_ticket: 10, vvip_ticket_price: 15_000, user_id: 20)
-event.photo.attach(io: file, filename: 'nes.png', content_type: 'image/png')
-event.photo_url = event.photo.url
-event.save
+
 
 
 
@@ -27,6 +21,8 @@ event.save
   begin
     json_data = URI.open(url).read
     data = JSON.parse(json_data)
+    category = %w[loisir sport concert culture]
+    free = [true, false]
 
     # upload on cloudinary
     file = URI.open(data['data']['images']['jpg']['large_image_url'])
@@ -37,9 +33,9 @@ event.save
     volume = rand(1..data['data']['volumes'].to_i)
     volume = 1 if data['data']['volumes'].nil?
 
-    event = Event.new(name: 'Evenement 1', description: 'Une decription simple et efficace qui fonctionne plutot bien',
+    event = Event.new(name: 'Evenement 1', description: 'Une description simple et efficace qui fonctionne plutot bien',
                       date: Faker::Date.between(from: '2023-09-15', to: '2023-12-31'), location: Faker::Address.city,
-                      category: %w[loisir voyage concert].sample, free: false, max_standard_ticket: 20,
+                      category: category.sample, free: free.sample, max_standard_ticket: 20,
                       standard_ticket_price: (1..5).to_a.sample * 1000, max_vip_ticket: 15, vip_ticket_price: (10..15).to_a.sample * 1000,
                       max_vvip_ticket: 10, vvip_ticket_price: (20..25).to_a.sample * 1000, user: User.all.first, photo_url: picture)
     event.photo.attach(io: file, filename: "#{saga}-#{volume}.jpg", content_type: 'image/jpg')

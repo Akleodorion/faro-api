@@ -6,5 +6,5 @@ class Event < ApplicationRecord
   validates :description, presence: true, length: { minimum: 50, maximum: 200 }
   validates :date, presence: true
   validates :location, presence: true # vérifier que la localisation existe bel est bien
-  validates :category, inclusion: { in: %w[loisir concert voyage] }
+  validates :category, inclusion: { in: %w[loisir concert sport culture] }
 end
