@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/get_api_key', to: 'api_keys#get_api_key'
   devise_for :users, path: '', path_names:
   {
     sign_in: 'login',
