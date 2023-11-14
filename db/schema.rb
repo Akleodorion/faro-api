@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_15_092233) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_11_005005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_15_092233) do
     t.integer "max_vvip_ticket"
     t.integer "vvip_ticket_price"
     t.string "photo_url"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "standard_ticket_description"
+    t.string "vip_ticket_description"
+    t.string "vvip_ticket_description"
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 

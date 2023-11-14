@@ -12,7 +12,7 @@ file = URI.open('https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/NES-C
 Event.destroy_all
 
 
-
+number = 1
 
 
 60.times do
@@ -23,6 +23,8 @@ Event.destroy_all
     data = JSON.parse(json_data)
     category = %w[loisir sport concert culture]
     free = [true, false]
+    number += 1;
+
 
     # upload on cloudinary
     file = URI.open(data['data']['images']['jpg']['large_image_url'])
@@ -33,11 +35,13 @@ Event.destroy_all
     volume = rand(1..data['data']['volumes'].to_i)
     volume = 1 if data['data']['volumes'].nil?
 
-    event = Event.new(name: 'Evenement 1', description: 'Une description simple et efficace qui fonctionne plutot bien',
-                      date: Faker::Date.between(from: '2023-09-15', to: '2023-12-31'), location: Faker::Address.city,
-                      category: category.sample, free: free.sample, max_standard_ticket: 20,
-                      standard_ticket_price: (1..5).to_a.sample * 1000, max_vip_ticket: 15, vip_ticket_price: (10..15).to_a.sample * 1000,
-                      max_vvip_ticket: 10, vvip_ticket_price: (20..25).to_a.sample * 1000, user: User.all.first, photo_url: picture)
+    event = Event.new(name: "Evenement #{number}", description: 'Une description simple et efficace qui fonctionne plutot bien',
+                      date: Faker::Date.between(from: '2023-09-15', to: '2023-12-31'), location: Faker::Address.city,latitude: Faker::Address.latitude,
+                      longitude: Faker::Address.longitude, category: category.sample, free: free.sample, max_standard_ticket: 20,
+                      standard_ticket_price: (1..5).to_a.sample * 1000, standard_ticket_description: "Une description simple pour un ticket standard",
+                      max_vip_ticket: 15, vip_ticket_price: (10..15).to_a.sample * 1000, vip_ticket_description: "Une description simple pour un ticket vip",
+                      max_vvip_ticket: 10, vvip_ticket_price: (20..25).to_a.sample * 1000, vvip_ticket_description: "Une description simple pour un ticket vvip",
+                      user: User.all.first, photo_url: picture)
     event.photo.attach(io: file, filename: "#{saga}-#{volume}.jpg", content_type: 'image/jpg')
     event.save
     sleep 1
