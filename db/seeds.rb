@@ -42,7 +42,7 @@ number = 1
                       max_vip_ticket: 15, vip_ticket_price: (10..15).to_a.sample * 1000, vip_ticket_description: "Une description simple pour un ticket vip",
                       max_vvip_ticket: 10, vvip_ticket_price: (20..25).to_a.sample * 1000, vvip_ticket_description: "Une description simple pour un ticket vvip",
                       user: User.all.first, photo_url: picture)
-    event.photo.attach(io: file, filename: "#{saga}-#{volume}.jpg", content_type: 'image/jpg')
+    # event.photo.attach(io: file, filename: "#{saga}-#{volume}.jpg", content_type: 'image/jpg')
     event.save
     sleep 1
   rescue OpenURI::HTTPError => error
