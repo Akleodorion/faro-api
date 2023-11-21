@@ -13,4 +13,5 @@ Rails.application.routes.draw do
 
   resources :events, only: %i[create index show update destroy]
   resources :tickets, only: %i[create index update destroy]
+  resources :members, only: %i[create index destroy]
 end

@@ -1,7 +1,10 @@
 class Event < ApplicationRecord
   belongs_to :user
   has_one_attached :photo
+  has_many :tickets, dependent: :destroy
+  has_many :members, dependent: :destroy
 
+  # Validation basique
   validates :name, presence: true, length: { minimum: 10 }
   validates :description, presence: true, length: { minimum: 50, maximum: 600 }
   validates :latitude, :longitude, presence: true, numericality: { only_float: true }
