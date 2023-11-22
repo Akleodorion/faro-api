@@ -7,16 +7,18 @@
 #   Character.create(name: "Luke", movie: movies.first)
 require 'open-uri'
 require 'faker'
-
 file = URI.open('https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/NES-Console-Set.jpg/1200px-NES-Console-Set.jpg')
-Event.destroy_all
 
+
+User.destroy_all
+User.create(email: "test1@gmail.com", password: "1234567", username: "test1", phone_number: "+22552525252")
+User.create(email: "test2@gmail.com", password: "1234567", username: "test2", phone_number: "+22552525252")
+User.create(email: "test3@gmail.com", password: "1234567", username: "test2", phone_number: "+22552525252")
 
 number = 1
 
-
 60.times do
-  random_id = rand(1..250)
+  random_id = rand(1..400)
   url = "https://api.jikan.moe/v4/manga/#{random_id}"
   begin
     json_data = URI.open(url).read
@@ -34,18 +36,43 @@ number = 1
     picture = data['data']['images']['jpg']['large_image_url']
     volume = rand(1..data['data']['volumes'].to_i)
     volume = 1 if data['data']['volumes'].nil?
-
-    event = Event.new(name: "Evenement #{number}", description: 'Une description simple et efficace qui fonctionne plutot bien',
-                      date: Faker::Date.between(from: '2023-09-15', to: '2023-12-31'), location: Faker::Address.city,latitude: Faker::Address.latitude,
-                      longitude: Faker::Address.longitude, category: category.sample, free: free.sample, max_standard_ticket: 20,
-                      standard_ticket_price: (1..5).to_a.sample * 1000, standard_ticket_description: "Une description simple pour un ticket standard",
-                      max_vip_ticket: 15, vip_ticket_price: (10..15).to_a.sample * 1000, vip_ticket_description: "Une description simple pour un ticket vip",
-                      max_vvip_ticket: 10, vvip_ticket_price: (20..25).to_a.sample * 1000, vvip_ticket_description: "Une description simple pour un ticket vvip",
-                      user: User.all.first, photo_url: picture)
+    puts 'creating event'
+    event = Event.new(name: "Evenement #{number}", description: Faker::Lorem.paragraph(sentence_count: 15, supplemental: false, random_sentences_to_add: 10),
+                      date: Faker::Date.between(from: '2023-12-15', to: '2023-12-31'), location: Faker::Address.city,latitude: Faker::Address.latitude,
+                      longitude: Faker::Address.longitude, category: category.sample, free: free.sample, max_standard_ticket: rand(15..20),
+                      standard_ticket_price: rand(1..5) * 1000, standard_ticket_description: Faker::Lorem.paragraph(sentence_count: 3),
+                      max_vip_ticket: rand(10..15), vip_ticket_price: rand(10..15) * 1000, vip_ticket_description: Faker::Lorem.paragraph(sentence_count: 3),
+                      max_vvip_ticket: rand(5..10), vvip_ticket_price: rand(20..25) * 1000, vvip_ticket_description: Faker::Lorem.paragraph(sentence_count: 3),
+                      user: User.all.sample, photo_url: picture, activated: false)
     event.photo.attach(io: file, filename: "#{saga}-#{volume}.jpg", content_type: 'image/jpg')
     event.save
+    puts 'saved event'
+
     sleep 1
   rescue OpenURI::HTTPError => error
     next
+  end
+end
+
+users = User.all
+users.each do |user|
+  puts user.id
+  events = Event.where.not(user_id: user.id)
+  puts events.count
+  3.times do
+    event = events.sample
+    type = ["standard", "vip", "vvip"].sample
+    case type
+    when "standard"
+
+      Ticket.create(type: type, description: event.standard_ticket_description, price: event.standard_ticket_price, verified: false, user_id: user.id, event_id: event.id)
+    when "vip"
+
+      Ticket.create(type: type, description: event.vip_ticket_description, price: event.vip_ticket_price, verified: false, user_id: user.id, event_id: event.id)
+    else
+
+      Ticket.create(type: type, description: event.vvip_ticket_description, price: event.vvip_ticket_description, verified: false, user_id: user.id, event_id: event.id)
+    end
+
   end
 end
