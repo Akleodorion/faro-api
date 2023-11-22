@@ -3,9 +3,9 @@ class MembersController < ApplicationController
   def create
     @member = Member.new(members_params)
     if @member.save
-      render json: { ticket: @ticket }, status: :created
+      render json: { member: @member }, status: :created
     else
-      render json: { errors: @ticket.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @member.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -15,6 +15,8 @@ class MembersController < ApplicationController
   end
 
   def destroy
+    # Ne peut supprimé un membre que le propriétaire de l'event.
+
     @member = Member.find(params[:id])
     if @member.destroy
       render json:  {message: 'Member supprimé avec succès'}
