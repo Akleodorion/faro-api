@@ -15,8 +15,6 @@ class MembersController < ApplicationController
   end
 
   def destroy
-    # Ne peut supprimé un membre que le propriétaire de l'event.
-
     @member = Member.find(params[:id])
     if @member.destroy
       render json:  {message: 'Member supprimé avec succès'}
