@@ -12,7 +12,7 @@ class EventsController < ApplicationController
 
   def index
     @events = Event.all
-    render json: @events,include: ['members' ]
+    render json: @events,include: ['members', 'tickets' ]
   end
 
   def show
