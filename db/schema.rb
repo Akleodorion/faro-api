@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_25_012450) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_27_070041) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,7 +46,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_25_012450) do
     t.string "name"
     t.text "description"
     t.datetime "date"
-    t.string "location"
+    t.string "country"
     t.string "category"
     t.boolean "free"
     t.bigint "user_id", null: false
@@ -65,6 +65,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_25_012450) do
     t.string "gold_ticket_description"
     t.string "platinum_ticket_description"
     t.boolean "activated"
+    t.string "country_code"
+    t.string "locality"
+    t.string "sublocality"
+    t.string "road"
+    t.string "plus_code"
+    t.boolean "closed"
+    t.string "start_time"
+    t.string "end_time"
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 

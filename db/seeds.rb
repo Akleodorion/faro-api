@@ -58,19 +58,19 @@ end
 
 users = User.all
 users.each do |user|
-  puts user.id
   events = Event.where.not(user_id: user.id)
-  puts events.count
-  3.times do
+  userList = User.where.not(id: user.id);
+  9.times do
     event = events.sample
     type = ["standard", "gold", "platinum"].sample
+    Member.create(event_id: event.id, user_id: userList.sample.id)
     case type
     when "standard"
-      Ticket.create(type: type, description: event.standard_ticket_description, price: event.standard_ticket_price, verified: false, user_id: user.id, event_id: event.id)
+      Ticket.create(type: type, description: event.standard_ticket_description, price: event.standard_ticket_price, verified: [true,false].sample, user_id: user.id, event_id: event.id)
     when "gold"
-      Ticket.create(type: type, description: event.gold_ticket_description, price: event.gold_ticket_price, verified: false, user_id: user.id, event_id: event.id)
+      Ticket.create(type: type, description: event.gold_ticket_description, price: event.gold_ticket_price, verified: [true,false].sample, user_id: user.id, event_id: event.id)
     else
-      Ticket.create(type: type, description: event.platinum_ticket_description, price: event.platinum_ticket_description, verified: false, user_id: user.id, event_id: event.id)
+      Ticket.create(type: type, description: event.platinum_ticket_description, price: event.platinum_ticket_description, verified: [true,false].sample, user_id: user.id, event_id: event.id)
     end
 
   end
