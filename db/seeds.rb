@@ -41,12 +41,14 @@ number = 1
                       date: Faker::Date.between(from: '2023-12-15', to: '2023-12-31'), location: Faker::Address.city,latitude: Faker::Address.latitude,
                       longitude: Faker::Address.longitude, category: category.sample, free: free.sample, max_standard_ticket: rand(15..20),
                       standard_ticket_price: rand(1..5) * 1000, standard_ticket_description: Faker::Lorem.paragraph(sentence_count: 3),
-                      max_vip_ticket: rand(10..15), vip_ticket_price: rand(10..15) * 1000, vip_ticket_description: Faker::Lorem.paragraph(sentence_count: 3),
-                      max_vvip_ticket: rand(5..10), vvip_ticket_price: rand(20..25) * 1000, vvip_ticket_description: Faker::Lorem.paragraph(sentence_count: 3),
+                      max_gold_ticket: rand(10..15), gold_ticket_price: rand(10..15) * 1000, gold_ticket_description: Faker::Lorem.paragraph(sentence_count: 3),
+                      max_platinum_ticket: rand(5..10), platinum_ticket_price: rand(20..25) * 1000, platinum_ticket_description: Faker::Lorem.paragraph(sentence_count: 3),
                       user: User.all.sample, photo_url: picture, activated: false)
     event.photo.attach(io: file, filename: "#{saga}-#{volume}.jpg", content_type: 'image/jpg')
     event.save
     puts 'saved event'
+    event.update(photo_url: event.photo.blob.url)
+    puts 'update event'
 
     sleep 1
   rescue OpenURI::HTTPError => error
@@ -56,22 +58,19 @@ end
 
 users = User.all
 users.each do |user|
-  puts user.id
   events = Event.where.not(user_id: user.id)
-  puts events.count
-  3.times do
+  userList = User.where.not(id: user.id);
+  9.times do
     event = events.sample
-    type = ["standard", "vip", "vvip"].sample
+    type = ["standard", "gold", "platinum"].sample
+    Member.create(event_id: event.id, user_id: userList.sample.id)
     case type
     when "standard"
-
-      Ticket.create(type: type, description: event.standard_ticket_description, price: event.standard_ticket_price, verified: false, user_id: user.id, event_id: event.id)
-    when "vip"
-
-      Ticket.create(type: type, description: event.vip_ticket_description, price: event.vip_ticket_price, verified: false, user_id: user.id, event_id: event.id)
+      Ticket.create(type: type, description: event.standard_ticket_description, price: event.standard_ticket_price, verified: [true,false].sample, user_id: user.id, event_id: event.id)
+    when "gold"
+      Ticket.create(type: type, description: event.gold_ticket_description, price: event.gold_ticket_price, verified: [true,false].sample, user_id: user.id, event_id: event.id)
     else
-
-      Ticket.create(type: type, description: event.vvip_ticket_description, price: event.vvip_ticket_description, verified: false, user_id: user.id, event_id: event.id)
+      Ticket.create(type: type, description: event.platinum_ticket_description, price: event.platinum_ticket_description, verified: [true,false].sample, user_id: user.id, event_id: event.id)
     end
 
   end

@@ -18,8 +18,9 @@ class Event < ApplicationRecord
   validates :max_standard_ticket, presence: true, numericality: { only_integer: true }
 
   # Validation ticket si payant
-  validates :max_vip_ticket, :max_vvip_ticket, presence: true, numericality: { only_integer: true }, if: :not_free?
-  validates :vip_ticket_description, :vvip_ticket_description, presence: true, length: { minimum: 20, maximum: 151 }, if: :not_free?
+  validates :max_gold_ticket, :max_platinum_ticket, presence: true, numericality: { only_integer: true }, if: :not_free?
+  validates :gold_ticket_price, :platinum_ticket_price,:standard_ticket_price , presence: true, numericality: { only_integer: true }, if: :not_free?
+  validates :gold_ticket_description, :platinum_ticket_description, presence: true, length: { minimum: 20, maximum: 151 }, if: :not_free?
   validate :ticket_prices_order, if: :not_free?
 
 
@@ -28,9 +29,9 @@ class Event < ApplicationRecord
   end
 
   def ticket_prices_order
-    if standard_ticket_price.present? && vip_ticket_price.present? && vvip_ticket_price.present?
-      if standard_ticket_price >= vip_ticket_price || vip_ticket_price >= vvip_ticket_price
-        errors.add(:base, "Les prix des tickets doivent être dans l'ordre croissant : standard < VIP < VVIP")
+    if standard_ticket_price.present? && gold_ticket_price.present? && platinum_ticket_price.present?
+      if standard_ticket_price >= gold_ticket_price || gold_ticket_price >= platinum_ticket_price
+        errors.add(:base, "Les prix des tickets doivent être dans l'ordre croissant : standard < gold < platinum")
       end
     end
   end

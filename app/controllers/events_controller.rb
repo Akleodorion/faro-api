@@ -24,6 +24,7 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
 
     if @event.update(event_params)
+      @event.update(photo_url: @event.photo.blob.url)
       render json: { event: @event , message: 'Événement modifié avec succès' }
     else
       render json: { errors: @event.errors.full_messages }, status: :unprocessable_entity
