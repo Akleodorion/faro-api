@@ -45,9 +45,9 @@ class EventsController < ApplicationController
 
   def event_params
     params.permit(
-      :name, :description, :date, :location, :longitude, :latitude, :category, :free, :photo_url,
-      :user_id, :id, :standard_ticket_price, :max_standard_ticket, :standard_ticket_description, :vip_ticket_price, :max_vip_ticket,
-      :vip_ticket_description, :vvip_ticket_price, :max_vvip_ticket, :vvip_ticket_description, :photo, :activated
+      :name, :description, :date,:start_time, :end_time ,:country, :country_code, :locality,:sublocality, :road,:plus_code, :longitude, :latitude, :category, :free, :photo_url,
+      :user_id, :id, :standard_ticket_price, :max_standard_ticket, :standard_ticket_description, :gold_ticket_price, :max_gold_ticket,
+      :gold_ticket_description, :platinum_ticket_price, :max_platinum_ticket, :platinum_ticket_description, :photo, :activated, :closed
     )
   end
 

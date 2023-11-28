@@ -8,7 +8,7 @@ class Event < ApplicationRecord
   validates :name, presence: true, length: { minimum: 10 }
   validates :description, presence: true, length: { minimum: 50, maximum: 600 }
   validates :latitude, :longitude, presence: true, numericality: { only_float: true }
-  validates :date, :locality,:country, :country_code,:start_time, :end_time   ,presence: true
+  validates :date, :locality,:country,:country_code,:start_time, :end_time ,presence: true
   validates :photo, presence: true, unless: :photo_attached?
 
   validates :category, inclusion: { in: %w[loisir concert sport culture] }
