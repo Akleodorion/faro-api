@@ -22,6 +22,11 @@ class Ticket < ApplicationRecord
     end
   end
 
+  if event.free? && tickets.exists?(user: user)
+    errors.add(:base, "You can only have one free ticket for this event")
+    return
+  end
+
   def validate_max_tickets(max_column)
     tickets = event.tickets.where(type: type)
     if tickets.count >= event.send(max_column)
