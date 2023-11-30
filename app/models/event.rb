@@ -5,7 +5,7 @@ class Event < ApplicationRecord
   has_many :members, dependent: :destroy
 
   # Validation basique
-  validates :name, presence: true, length: { minimum: 10 }
+  validates :name, presence: true, length: { minimum: 10, maximum: 50 }
   validates :description, presence: true, length: { minimum: 50, maximum: 600 }
   validates :latitude, :longitude, presence: true, numericality: { only_float: true }
   validates :date, :locality,:country,:country_code,:start_time, :end_time ,presence: true
@@ -15,11 +15,11 @@ class Event < ApplicationRecord
 
   # Validation ticket toujours active
   validates :standard_ticket_description, presence: true, length: { minimum: 20, maximum: 151 }
-  validates :max_standard_ticket, presence: true, numericality: { only_integer: true }
+  validates :max_standard_ticket, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   # Validation ticket si payant
-  validates :max_gold_ticket, :max_platinum_ticket, presence: true, numericality: { only_integer: true }, if: :not_free?
-  validates :gold_ticket_price, :platinum_ticket_price,:standard_ticket_price , presence: true, numericality: { only_integer: true }, if: :not_free?
+  validates :max_gold_ticket, :max_platinum_ticket, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :not_free?
+  validates :gold_ticket_price, :platinum_ticket_price,:standard_ticket_price , presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :not_free?
   validates :gold_ticket_description, :platinum_ticket_description, presence: true, length: { minimum: 20, maximum: 151 }, if: :not_free?
   validate :ticket_prices_order, if: :not_free?
 
@@ -38,9 +38,14 @@ class Event < ApplicationRecord
 
 
 
+
   private
 
   def not_free?
     !free
+  end
+
+  def free?
+    free
   end
 end
