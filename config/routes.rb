@@ -11,7 +11,13 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  resources :events, only: %i[create index show update destroy]
+  resources :events, only: %i[create index show update destroy] do
+    member do
+      put 'update_activation'
+      put 'update_close'
+    end
+  end
   resources :tickets, only: %i[create index update destroy]
   resources :members, only: %i[create index destroy]
+  resources :users, only: %i[index]
 end
