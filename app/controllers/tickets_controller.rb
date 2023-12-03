@@ -4,6 +4,9 @@ class TicketsController < ApplicationController
     @ticket = Ticket.new(ticket_params)
     @event = Event.find(params[:event_id])
     if @ticket.save
+      # Mise à jour de photo_url avec l'URL Cloudinary
+      generate_qr_code_and_attach_to_ticket(@ticket)
+      @ticket.update(qr_code_url: @ticket.photo.blob.url)
       render json: { ticket: @ticket }, status: :created
     else
       render json: { errors: @ticket.errors.full_messages }, status: :unprocessable_entity
@@ -39,13 +42,29 @@ class TicketsController < ApplicationController
   private
 
   def ticket_params
-    params.permit(:type, :description, :price, :verified, :user_id, :event_id)
+    params.permit(:type, :description, :price, :verified, :user_id, :event_id, :qr_code_url)
   end
 
   def update_params
     params.permit(:user_id)
   end
 
+  def generate_qr_code_and_attach_to_ticket(ticket)
+    # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)
+    qrcode = RQRCode::QRCode.new("TicketID: #{ticket.id}")
+    png = qrcode.as_png(size: 120)
 
+    # Enregistrez l'image temporaire
+    temp_file = Tempfile.new(['qr_code', '.png'])
+    temp_file.binmode
+    temp_file.write(png.to_s)
+    temp_file.rewind
+
+    # Attachez le fichier à l'instance du Ticket
+    ticket.photo.attach(io: temp_file, filename: 'qr_code.png')
+
+    temp_file.close
+    temp_file.unlink
+  end
 
 end
