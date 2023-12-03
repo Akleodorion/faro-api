@@ -31,6 +31,36 @@ class EventsController < ApplicationController
     end
   end
 
+  def update_activation
+    @event = Event.find(params[:id])
+
+    if (@event.activated)
+      render json: { errors: "l'évènement est déjà activé"}, status: :unprocessable_entity
+    else
+      if @event.update(activated: true)
+        render json: { event: @event , message: 'Événement activé avec succès' }
+      else
+        render json: { errors: @event.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+  end
+
+  def update_close
+    @event = Event.find(params[:id])
+
+    if (@event.closed)
+      render json: { errors: "l'évènement est déjà fermé"}, status: :unprocessable_entity
+    else
+      if @event.update(closed: true)
+        render json: { event: @event , message: 'Événement fermé avec succès' }
+      else
+        render json: { errors: @event.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+  end
+
   def destroy
     @event = Event.find(params[:id])
     if @event.destroy
