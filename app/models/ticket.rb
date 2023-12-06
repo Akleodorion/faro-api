@@ -33,11 +33,11 @@ class Ticket < ApplicationRecord
     tickets = event.tickets.where(type: type)
 
 
-    # # Check if the event is free and the user already has a ticket
-    # if event.free? && tickets.exists?(user: user)
-    #   errors.add(:base, "You can only have one free ticket for this event")
-    #   return
-    # end
+    # Check if the event is free and the user already has a ticket
+    if event.free? && tickets.exists?(user: user)
+      errors.add(:base, "You can only have one free ticket for this event")
+      return
+    end
 
     if tickets.count >= event.send(max_column)
       errors.add(:base, "Maximum number of #{type} tickets reached for this event")

@@ -111,7 +111,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_06_054109) do
     t.string "username"
     t.string "jti"
     t.string "phone_number"
-    t.string "qr_code_url"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
