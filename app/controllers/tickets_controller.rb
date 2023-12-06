@@ -51,7 +51,7 @@ class TicketsController < ApplicationController
 
   def generate_qr_code_and_attach_to_ticket(ticket)
     # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)
-    qrcode = RQRCode::QRCode.new("TicketID: #{ticket.id}")
+    qrcode = RQRCode::QRCode.new("#{ticket.id},#{ticket.event_id},#{ticket.type}")
     png = qrcode.as_png(size: 120)
 
     # Enregistrez l'image temporaire
