@@ -36,7 +36,9 @@ class Event < ApplicationRecord
     end
   end
 
-
+  def free?
+    free
+  end
 
 
   private
@@ -45,7 +47,5 @@ class Event < ApplicationRecord
     !free
   end
 
-  def free?
-    free
-  end
+
 end
