@@ -17,7 +17,7 @@ User.create(email: "test1@gmail.com", password: "1234567", username: "chris", ph
   email = "#{Faker::Name.first_name}.#{Faker::Name.last_name}@gmail.com"
   password = "#{Faker::Alphanumeric.alphanumeric(number: 10, min_alpha: 3)}"
   username = Faker::Ancient.primordial
-  phone_number = "+225 08 #{Faker::PhoneNumber.subscriber_number(length: 8)}"
+  phone_number = "+22508#{Faker::PhoneNumber.subscriber_number(length: 8)}"
   User.create(email: email, password: password, username: username, phone_number: phone_number)
 end
 
@@ -116,8 +116,8 @@ users.each do |user|
     if event.free
       type = "standard"
     end
-
-    Member.create(event_id: event.id, user_id: userList.sample.id)
+    pickedUser = userList.sample
+    Member.create(event_id: event.id, user_id: pickedUser.id, username:pickedUser.username)
     case type
     when "standard"
       ticket = Ticket.create(type: type, description: event.standard_ticket_description, price: event.standard_ticket_price, verified: [true,false].sample, user_id: user.id, event_id: event.id)
