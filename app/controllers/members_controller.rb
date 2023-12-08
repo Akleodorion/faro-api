@@ -16,12 +16,13 @@ class MembersController < ApplicationController
 
   def destroy
     @member = Member.find(params[:id])
-    if @member.destroy
-      render json:  {message: 'Member supprimé avec succès'}
-    else
-      puts @member.errors.full_messages
-      render json: { erros: @member.errors.full_messages }, status: :unprocessable_entity
-    end
+
+    @member.destroy!
+
+    render json: { message: 'Member supprimé avec succès' }
+  rescue ActiveRecord::RecordNotDestroyed => e
+    puts e.message
+    render json: { errors: [e.message] }, status: :unprocessable_entity
   end
 
 

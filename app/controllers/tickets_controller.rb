@@ -1,8 +1,8 @@
 class TicketsController < ApplicationController
 
   def create
-    @ticket = Ticket.new(ticket_params)
-    @event = Event.find(update_params)
+    @ticket = Ticket.new(ticket_params.except(:id))
+    @event = Event.find(params[:event_id])
     if @ticket.save
       # Mise à jour de photo_url avec l'URL Cloudinary
       generate_qr_code_and_attach_to_ticket(@ticket)
@@ -35,7 +35,7 @@ class TicketsController < ApplicationController
       render json:  {message: 'Ticket supprimé avec succès'}
     else
       puts @ticket.errors.full_messages
-      render json: { erros: @ticket.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @ticket.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
