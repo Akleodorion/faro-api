@@ -2,7 +2,7 @@ class TicketsController < ApplicationController
 
   def create
     @ticket = Ticket.new(ticket_params)
-    @event = Event.find(params[:event_id])
+    @event = Event.find(update_params)
     if @ticket.save
       # Mise à jour de photo_url avec l'URL Cloudinary
       generate_qr_code_and_attach_to_ticket(@ticket)
@@ -20,6 +20,7 @@ class TicketsController < ApplicationController
 
   def update
     @ticket = Ticket.find(params[:id])
+    print(update_params)
     if @ticket.update(update_params)
       render json: {ticket: @ticket , message: 'Ticket modifié avec succès'}
     else
@@ -42,11 +43,11 @@ class TicketsController < ApplicationController
   private
 
   def ticket_params
-    params.permit(:type, :description, :price, :verified, :user_id, :event_id, :qr_code_url)
+    params.permit(:type, :description, :price, :verified, :user_id, :event_id, :qr_code_url, :id)
   end
 
   def update_params
-    params.permit(:user_id)
+    params.permit(:user_id, :id)
   end
 
   def generate_qr_code_and_attach_to_ticket(ticket)
