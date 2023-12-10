@@ -29,6 +29,9 @@ class Ticket < ApplicationRecord
 
 
 
+
+
+
   def validate_max_tickets(max_column)
     tickets = event.tickets.where(type: type)
 
