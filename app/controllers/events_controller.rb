@@ -37,7 +37,7 @@ class EventsController < ApplicationController
     if (@event.activated)
       render json: { errors: "l'évènement est déjà activé"}, status: :unprocessable_entity
     else
-      if @event.update(activated: true)
+      if @event.update(activated: params[:activated])
         render json: { event: @event , message: 'Événement activé avec succès' }
       else
         render json: { errors: @event.errors.full_messages }, status: :unprocessable_entity
@@ -52,7 +52,7 @@ class EventsController < ApplicationController
     if (@event.closed)
       render json: { errors: "l'évènement est déjà fermé"}, status: :unprocessable_entity
     else
-      if @event.update(closed: true)
+      if @event.update(closed:  params[:closed])
         render json: { event: @event , message: 'Événement fermé avec succès' }
       else
         render json: { errors: @event.errors.full_messages }, status: :unprocessable_entity

@@ -1,9 +1,7 @@
 class MembersController < ApplicationController
 
   def create
-    @user = User.find(members_params[:user_id])
     @member = Member.new(members_params)
-    @member.username = @user.username
     if @member.save
       render json: { member: @member }, status: :created
     else
@@ -29,6 +27,6 @@ class MembersController < ApplicationController
   private
 
   def members_params
-    params.permit(:user_id, :event_id)
+    params.permit(:user_id, :event_id, :username, :id)
   end
 end
