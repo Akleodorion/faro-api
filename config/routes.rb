@@ -17,7 +17,7 @@ Rails.application.routes.draw do
       put 'update_close'
     end
   end
-  resources :tickets, only: %i[create index update destroy]
-  resources :members, only: %i[create index destroy]
-  resources :users, only: %i[index]
+  resources :tickets, only: %i[create index update destroy] ,defaults: { format: 'json' }
+  resources :members, only: %i[create index destroy] ,defaults: { format: 'json' }
+  resources :users, only: %i[index] ,defaults: { format: 'json' }
 end

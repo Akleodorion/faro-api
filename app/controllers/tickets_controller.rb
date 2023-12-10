@@ -1,10 +1,9 @@
 class TicketsController < ApplicationController
 
   def create
-    @ticket = Ticket.new(ticket_params)
-    @event = Event.find(update_params)
+    @ticket = Ticket.new(ticket_params.except(:id))
+    @event = Event.find(params[:event_id])
     if @ticket.save
-      # Mise à jour de photo_url avec l'URL Cloudinary
       generate_qr_code_and_attach_to_ticket(@ticket)
       @ticket.update(qr_code_url: @ticket.photo.blob.url)
       render json: { ticket: @ticket }, status: :created
@@ -20,12 +19,17 @@ class TicketsController < ApplicationController
 
   def update
     @ticket = Ticket.find(params[:id])
-    print(update_params)
-    if @ticket.update(update_params)
-      render json: {ticket: @ticket , message: 'Ticket modifié avec succès'}
+    isMyTicket = params[:user_id] == @ticket.user_id
+    if(!isMyTicket)
+      if @ticket.update(update_params)
+        render json: {ticket: @ticket , message: 'Ticket modifié avec succès'}
+      else
+        puts @ticket.errors.full_messages
+        render json: { errors: @ticket.errors.full_messages}, status: :unprocessable_entity
+      end
     else
-      puts @ticket.errors.full_messages
-      render json: { errors: @ticket.errors.full_messages}, status: :unprocessable_entity
+    render json: { errors: "Vous ne pouvez pas vous envoyer un ticket"}, status: :unprocessable_entity
+
     end
   end
 
@@ -35,7 +39,7 @@ class TicketsController < ApplicationController
       render json:  {message: 'Ticket supprimé avec succès'}
     else
       puts @ticket.errors.full_messages
-      render json: { erros: @ticket.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @ticket.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -51,17 +55,14 @@ class TicketsController < ApplicationController
   end
 
   def generate_qr_code_and_attach_to_ticket(ticket)
-    # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)
     qrcode = RQRCode::QRCode.new("#{ticket.id},#{ticket.event_id},#{ticket.type}")
     png = qrcode.as_png(size: 120)
 
-    # Enregistrez l'image temporaire
     temp_file = Tempfile.new(['qr_code', '.png'])
     temp_file.binmode
     temp_file.write(png.to_s)
     temp_file.rewind
 
-    # Attachez le fichier à l'instance du Ticket
     ticket.photo.attach(io: temp_file, filename: 'qr_code.png')
 
     temp_file.close
