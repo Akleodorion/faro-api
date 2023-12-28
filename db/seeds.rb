@@ -10,10 +10,12 @@ require 'faker'
 
 
 User.destroy_all
-User.create(email: "test1@gmail.com", password: "1234567", username: "chris", phone_number: "+2250845523070")
+User.create(email: "test1@gmail.com", password: "1234567", username: "Chris", phone_number: "+2250807090294")
+User.create(email: "test2@gmail.com", password: "1234567", username: "Tressy", phone_number: "+2250807260193")
+User.create(email: "test3@gmail.com", password: "1234567", username: "Aby", phone_number: "+2250807051023")
+User.create(email: "test4@gmail.com", password: "1234567", username: "Elie", phone_number: "+2250807020722")
 
-
-19.times do
+16.times do
   email = "#{Faker::Name.first_name}.#{Faker::Name.last_name}@gmail.com"
   password = "#{Faker::Alphanumeric.alphanumeric(number: 10, min_alpha: 3)}"
   username = Faker::Ancient.primordial
@@ -38,7 +40,7 @@ users.each do |user|
 
         #Initialisation des variables
         category = %w[loisir sport concert culture].sample
-        free = [true, false].sample
+        free = [true,false].sample
         description = Faker::Lorem.paragraph(sentence_count: 15, supplemental: false, random_sentences_to_add: 10)
         date = Faker::Date.between(from: '2023-12-15', to: '2023-12-31')
 
@@ -120,7 +122,10 @@ users.each do |user|
     Member.create(event_id: event.id, user_id: pickedUser.id, username:pickedUser.username)
     case type
     when "standard"
-      ticket = Ticket.create(type: type, description: event.standard_ticket_description, price: event.standard_ticket_price, verified: [true,false].sample, user_id: user.id, event_id: event.id)
+      ticket = Ticket.create(type: type, description: event.standard_ticket_description,
+      price: event.standard_ticket_price, verified: [true,false].sample,
+      user_id: user.id, event_id: event.id)
+
       # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)
       qrcode = RQRCode::QRCode.new("#{ticket.id},#{ticket.event_id},#{ticket.type}")
       png = qrcode.as_png(size: 120)
@@ -138,7 +143,10 @@ users.each do |user|
       temp_file.unlink
       ticket.update(qr_code_url: ticket.photo.blob.url)
     when "gold"
-      ticket = Ticket.create(type: type, description: event.gold_ticket_description, price: event.gold_ticket_price, verified: [true,false].sample, user_id: user.id, event_id: event.id)
+      ticket = Ticket.create(type: type, description: event.gold_ticket_description,
+      price: event.gold_ticket_price, verified: [true,false].sample,
+      user_id: user.id, event_id: event.id)
+
       # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)
       qrcode = RQRCode::QRCode.new("#{ticket.id},#{ticket.event_id},#{ticket.type}")
       png = qrcode.as_png(size: 120)
@@ -153,7 +161,10 @@ users.each do |user|
       temp_file.unlink
       ticket.update(qr_code_url: ticket.photo.blob.url)
     else
-      ticket = Ticket.create(type: type, description: event.platinum_ticket_description, price: event.platinum_ticket_description, verified: [true,false].sample, user_id: user.id, event_id: event.id)
+      ticket = Ticket.create(type: type, description: event.platinum_ticket_description,
+      price: event.platinum_ticket_description, verified: [true,false].sample,
+      user_id: user.id, event_id: event.id)
+
       # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)
       qrcode = RQRCode::QRCode.new("#{ticket.id},#{ticket.event_id},#{ticket.type}")
       png = qrcode.as_png(size: 120)
