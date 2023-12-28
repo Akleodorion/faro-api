@@ -66,7 +66,8 @@ Rails.application.configure do
   config.i18n.fallbacks = true
 
 
-  config.devise_jwt.secret_key = Rails.application.credentials.devise_jwt_secret_key
+  config.devise_jwt.secret_key = Rails.application.credentials.devise_jwt[:secret_key]
+
 
 
   # Don't log any deprecations.
