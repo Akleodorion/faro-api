@@ -78,6 +78,7 @@ users.each do |user|
       volume = 1 if data['data']['volumes'].nil?
       puts 'creating event'
       event = Event.new(name: "Evenement #{number}", description:, date:, country:, country_code:, category:, free:,
+                        latitude:, longitude:, locality:, sublocality:, road:, plus_code:,
                         max_standard_ticket:, standard_ticket_price:, standard_ticket_description:, max_gold_ticket:,
                         gold_ticket_price:, gold_ticket_description:, max_platinum_ticket:, platinum_ticket_price:,
                         platinum_ticket_description:, user:, photo_url: picture, start_time:, end_time:,
