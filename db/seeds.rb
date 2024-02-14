@@ -17,7 +17,7 @@ User.create(email: 'test4@gmail.com', password: '1234567', username: 'Elie', pho
   password = Faker::Alphanumeric.alphanumeric(number: 10, min_alpha: 3).to_s
   username = Faker::Ancient.primordial
   phone_number = "+22508#{Faker::PhoneNumber.subscriber_number(length: 8)}"
-  User.create(email, password, username, phone_number)
+  User.create(email:, password:, username:, phone_number:)
 end
 
 users = User.all
