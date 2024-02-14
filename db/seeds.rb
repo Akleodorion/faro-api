@@ -23,81 +23,78 @@ end
 users = User.all
 number = 0
 users.each do |user|
- 3.times do
-      random_id = rand(1..400)
-      url = "https://api.jikan.moe/v4/manga/#{random_id}"
-      number += 1
-      begin
-        # Call API.
-        json_data = URI.open(url).read
-        data = JSON.parse(json_data)
+  3.times do
+    random_id = rand(1..400)
+    url = "https://api.jikan.moe/v4/manga/#{random_id}"
+    number += 1
+    begin
+      # Call API.
+      json_data = URI.open(url).read
+      data = JSON.parse(json_data)
 
-        # Initialisation des variables
-        category = %w[loisir sport concert culture].sample
-        free = [true, false].sample
-        description = Faker::Lorem.paragraph(sentence_count: 15, supplemental: false, random_sentences_to_add: 10)
-        date = Faker::Date.between(from: '2024-2-15', to: '2024-5-31')
+      # Initialisation des variables
+      category = %w[loisir sport concert culture].sample
+      free = [true, false].sample
+      description = Faker::Lorem.paragraph(sentence_count: 15, supplemental: false, random_sentences_to_add: 10)
+      date = Faker::Date.between(from: '2024-2-15', to: '2024-5-31')
 
-        country_code = Faker::Address.country_code
-        country = Faker::Address.country_by_code(code: country_code)
-        locality =  Faker::Address.city
-        sublocality = Faker::Address.community
-        road = Faker::Address.street_address
-        plus_code = Faker::Address.postcode
-        latitude = Faker::Address.latitude
-        longitude = Faker::Address.longitude
+      country_code = Faker::Address.country_code
+      country = Faker::Address.country_by_code(code: country_code)
+      locality =  Faker::Address.city
+      sublocality = Faker::Address.community
+      road = Faker::Address.street_address
+      plus_code = Faker::Address.postcode
+      latitude = Faker::Address.latitude
+      longitude = Faker::Address.longitude
 
-        standard_ticket_price = nil
-        standard_ticket_description = Faker::Lorem.paragraph(sentence_count: 3)
-        max_standard_ticket = rand(15..20)
-        max_gold_ticket = nil
-        gold_ticket_description = nil
-        gold_ticket_price = nil
-        platinum_ticket_description = nil
-        platinum_ticket_price = nil
-        max_platinum_ticket = nil
-        start_time = ['18:00', '19:00', '20:00', '21:00'].sample
-        end_time = ['02:00', '03:00', '04:00', '05:00'].sample
+      standard_ticket_price = nil
+      standard_ticket_description = Faker::Lorem.paragraph(sentence_count: 3)
+      max_standard_ticket = rand(15..20)
+      max_gold_ticket = nil
+      gold_ticket_description = nil
+      gold_ticket_price = nil
+      platinum_ticket_description = nil
+      platinum_ticket_price = nil
+      max_platinum_ticket = nil
+      start_time = ['18:00', '19:00', '20:00', '21:00'].sample
+      end_time = ['02:00', '03:00', '04:00', '05:00'].sample
 
-        unless free
-          standard_ticket_price = rand(1..5) * 1000
-          max_gold_ticket = rand(10..15)
-          gold_ticket_description = Faker::Lorem.paragraph(sentence_count: 3)
-          gold_ticket_price = rand(10..15) * 1000
-          platinum_ticket_description = Faker::Lorem.paragraph(sentence_count: 3)
-          platinum_ticket_price = rand(20..25) * 1000
-          max_platinum_ticket = rand(5..10)
-        end
-        # upload on cloudinary
-        file = URI.open(data['data']['images']['jpg']['large_image_url'])
-
-        # event require name, description, location, category, free or not, ticket pricing ,a user and an picture url.
-        saga = data['data']['titles'][0]['title']
-        picture = data['data']['images']['jpg']['large_image_url']
-        volume = rand(1..data['data']['volumes'].to_i)
-        volume = 1 if data['data']['volumes'].nil?
-        puts 'creating event'
-        event = Event.new(name: "Evenement #{number}", description: description, date: date, country: country ,country_code: country_code,
-                          locality: locality,sublocality: sublocality, road: road, plus_code: plus_code ,latitude: latitude,longitude: longitude,
-                          category: category, free: free,max_standard_ticket: max_standard_ticket, standard_ticket_price: standard_ticket_price,
-                          standard_ticket_description: standard_ticket_description, max_gold_ticket:max_gold_ticket, gold_ticket_price: gold_ticket_price,
-                          gold_ticket_description: gold_ticket_description, max_platinum_ticket: max_platinum_ticket, platinum_ticket_price: platinum_ticket_price,
-                          platinum_ticket_description: platinum_ticket_description, user: user, photo_url: picture,start_time: start_time, end_time: end_time ,activated: false, closed: false)
-
-        event.photo.attach(io: file, filename: "#{saga}-#{volume}.jpg", content_type: 'image/jpg')
-        event.save!
-        puts 'saved event'
-        event.update(photo_url: event.photo.blob.url)
-        puts 'update event'
-
-        sleep 1
-      rescue OpenURI::HTTPError => error
-        next
+      unless free
+        standard_ticket_price = rand(1..5) * 1000
+        max_gold_ticket = rand(10..15)
+        gold_ticket_description = Faker::Lorem.paragraph(sentence_count: 3)
+        gold_ticket_price = rand(10..15) * 1000
+        platinum_ticket_description = Faker::Lorem.paragraph(sentence_count: 3)
+        platinum_ticket_price = rand(20..25) * 1000
+        max_platinum_ticket = rand(5..10)
       end
+      # upload on cloudinary
+      file = URI.open(data['data']['images']['jpg']['large_image_url'])
+
+      # event require name, description, location, category, free or not, ticket pricing ,a user and an picture url.
+      saga = data['data']['titles'][0]['title']
+      picture = data['data']['images']['jpg']['large_image_url']
+      volume = rand(1..data['data']['volumes'].to_i)
+      volume = 1 if data['data']['volumes'].nil?
+      puts 'creating event'
+      event = Event.new(name: "Evenement #{number}", description:, date:, country:, country_code:, category:, free:,
+                        max_standard_ticket:, standard_ticket_price:, standard_ticket_description:, max_gold_ticket:,
+                        gold_ticket_price:, gold_ticket_description:, max_platinum_ticket:, platinum_ticket_price:,
+                        platinum_ticket_description:, user:, photo_url: picture, start_time:, end_time:,
+                        activated: false, closed: false)
+
+      event.photo.attach(io: file, filename: "#{saga}-#{volume}.jpg", content_type: 'image/jpg')
+      event.save!
+      puts 'saved event'
+      event.update(photo_url: event.photo.blob.url)
+      puts 'update event'
+
+      sleep 1
+    rescue OpenURI::HTTPError => error
+      next
     end
   end
-
-
+end
 
 users.each do |user|
   events = Event.where.not(user_id: user.id)
@@ -112,9 +109,9 @@ users.each do |user|
     Member.create(event_id: event.id, user_id: picked_user.id, username: picked_user.username)
     case type
     when 'standard'
-      ticket = Ticket.create(type, description: event.standard_ticket_description,
-                                   price: event.standard_ticket_price, verified: [true, false].sample,
-                                   user_id: user.id, event_id: event.id)
+      ticket = Ticket.create(type:, description: event.standard_ticket_description,
+                             price: event.standard_ticket_price, verified: [true, false].sample,
+                             user_id: user.id, event_id: event.id)
 
       # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)
       qrcode = RQRCode::QRCode.new("#{ticket.id},#{ticket.event_id},#{ticket.type}")
@@ -132,10 +129,10 @@ users.each do |user|
       temp_file.close
       temp_file.unlink
       ticket.update(qr_code_url: ticket.photo.blob.url)
-    when "gold"
-      ticket = Ticket.create(type: type, description: event.gold_ticket_description,
-      price: event.gold_ticket_price, verified: [true,false].sample,
-      user_id: user.id, event_id: event.id)
+    when 'gold'
+      ticket = Ticket.create(type:, description: event.gold_ticket_description,
+                             price: event.gold_ticket_price, verified: [true, false].sample,
+                             user_id: user.id, event_id: event.id)
 
       # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)
       qrcode = RQRCode::QRCode.new("#{ticket.id},#{ticket.event_id},#{ticket.type}")
@@ -151,9 +148,9 @@ users.each do |user|
       temp_file.unlink
       ticket.update(qr_code_url: ticket.photo.blob.url)
     else
-      ticket = Ticket.create(type: type, description: event.platinum_ticket_description,
-      price: event.platinum_ticket_description, verified: [true,false].sample,
-      user_id: user.id, event_id: event.id)
+      ticket = Ticket.create(type:, description: event.platinum_ticket_description,
+                             price: event.platinum_ticket_description, verified: [true, false].sample,
+                             user_id: user.id, event_id: event.id)
 
       # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)
       qrcode = RQRCode::QRCode.new("#{ticket.id},#{ticket.event_id},#{ticket.type}")
