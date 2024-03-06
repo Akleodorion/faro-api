@@ -150,7 +150,7 @@ users.each do |user|
       ticket.update(qr_code_url: ticket.photo.blob.url)
     else
       ticket = Ticket.create(type:, description: event.platinum_ticket_description,
-                             price: event.platinum_ticket_description, verified: [true, false].sample,
+                             price: event.platinum_ticket_price, verified: [true, false].sample,
                              user_id: user.id, event_id: event.id)
 
       # Logique pour générer le QR code (utilisez rqrcode ou une autre bibliothèque)

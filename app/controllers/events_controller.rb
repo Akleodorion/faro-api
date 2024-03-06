@@ -12,12 +12,12 @@ class EventsController < ApplicationController
 
   def index
     @events = Event.all
-    render json: @events,include: ['members', 'tickets' ]
+    render json: @events, include: %w[members tickets]
   end
 
   def show
     @event = Event.find(params[:id])
-    render json: @event,include: ['members' ]
+    render json: @event, include: ['members']
   end
 
   def update
@@ -25,7 +25,7 @@ class EventsController < ApplicationController
 
     if @event.update(event_params)
       @event.update(photo_url: @event.photo.blob.url)
-      render json: { event: @event , message: 'Événement modifié avec succès' }
+      render json: { event: @event, message: 'Événement modifié avec succès' }
     else
       render json: { errors: @event.errors.full_messages }, status: :unprocessable_entity
     end
