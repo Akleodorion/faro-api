@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  resources :events, only: %i[create index show update destroy], defaults: { format: 'json' }do
+  resources :events, only: %i[create index show update destroy], defaults: { format: 'json' } do
     member do
       put 'update_activation'
       put 'update_close'
