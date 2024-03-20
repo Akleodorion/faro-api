@@ -2,7 +2,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
 
-  include Devise::JWT::RevocationStrategies::JTIMatcher
+
   has_many :events, dependent: :destroy
   has_many :tickets, dependent: :destroy
   has_many :members, dependent: :destroy

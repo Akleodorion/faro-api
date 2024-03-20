@@ -4,8 +4,7 @@ Rails.application.routes.draw do
   {
     sign_in: 'login',
     sign_out: 'logout',
-    registration: 'signup',
-    edit_user_password: 'edit'
+    registration: 'signup'
   }, controllers:
   {
     sessions: 'users/sessions',
@@ -18,7 +17,7 @@ Rails.application.routes.draw do
       put 'update_close'
     end
   end
-  resources :tickets, only: %i[create index update destroy] ,defaults: { format: 'json' }
-  resources :members, only: %i[create index destroy] ,defaults: { format: 'json' }
-  resources :users, only: %i[index] ,defaults: { format: 'json' }
+  resources :tickets, only: %i[create index update destroy], defaults: { format: 'json' }
+  resources :members, only: %i[create index destroy], defaults: { format: 'json' }
+  resources :users, only: %i[index], defaults: { format: 'json' }
 end
