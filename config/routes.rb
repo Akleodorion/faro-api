@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
+
   get '/get_api_key', to: 'api_keys#get_api_key'
+  post 'password/forgot', to: 'passwords#forgot'
+  post 'password/reset', to: 'passwords#reset'
+
   devise_for :users, path: '', path_names:
   {
     sign_in: 'login',
