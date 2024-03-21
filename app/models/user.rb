@@ -29,6 +29,6 @@ class User < ApplicationRecord
   private
 
   def generate_token
-    SecureRandom.hex(5)
+    SecureRandom.hex(3)
   end
 end
