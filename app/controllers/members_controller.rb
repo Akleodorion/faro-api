@@ -1,11 +1,10 @@
 class MembersController < ApplicationController
-
   def create
     @member = Member.new(members_params)
     if @member.save
       render json: { member: @member }, status: :created
     else
-      render json: { errors: @member.errors.messages}, status: :unprocessable_entity
+      render json: { errors: @member.errors.messages }, status: :unprocessable_entity
     end
   end
 
@@ -17,12 +16,11 @@ class MembersController < ApplicationController
   def destroy
     @member = Member.find(params[:id])
     @member.destroy!
-    render json: { message: 'Member supprimé avec succès' }
+    render json: { message: 'Membre supprimé avec succès' }
   rescue ActiveRecord::RecordNotDestroyed => e
     puts e.message
     render json: { errors: [e.message] }, status: :unprocessable_entity
   end
-
 
   private
 
