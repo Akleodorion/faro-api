@@ -16,11 +16,11 @@ class TicketsController < ApplicationController
     render json: @tickets
   end
 
-  def update
+  def transfer_ticket
     @ticket = Ticket.find(params[:id])
     is_my_ticket = params[:user_id] == @ticket.user_id
     if !is_my_ticket
-      @ticket.update(update_params) ? update_success_response : update_error_response
+      @ticket.update(transfer_ticket_params) ? update_success_response : update_error_response
     else
       render json: { errors: 'Vous ne pouvez pas vous envoyer un ticket' }, status: :unprocessable_entity
     end
@@ -41,7 +41,7 @@ class TicketsController < ApplicationController
     params.permit(:type, :description, :price, :verified, :user_id, :event_id, :qr_code_url, :id)
   end
 
-  def update_params
+  def transfer_ticket_params
     params.permit(:user_id, :id)
   end
 
