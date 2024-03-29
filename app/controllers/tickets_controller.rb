@@ -16,8 +16,17 @@ class TicketsController < ApplicationController
     render json: @tickets
   end
 
-  def transfer_ticket
+  def destroy
     @ticket = Ticket.find(params[:id])
+    if @ticket.destroy
+      render json: { message: 'Ticket supprimé avec succès' }
+    else
+      render json: { errors: @ticket.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def transfer_ticket
+    @ticket = Ticket.find(id: params[:id])
     is_my_ticket = params[:user_id] == @ticket.user_id
     if !is_my_ticket
       @ticket.update(transfer_ticket_params) ? update_success_response : update_error_response
@@ -26,10 +35,14 @@ class TicketsController < ApplicationController
     end
   end
 
-  def destroy
+  def validate_ticket
     @ticket = Ticket.find(params[:id])
-    if @ticket.destroy
-      render json: { message: 'Ticket supprimé avec succès' }
+    @event_ticket_list = Event.find(params[:event_id]).tickets
+    return error_response('not_included') unless @event_ticket_list.include?(@ticket)
+    return error_response('already_validated') if @ticket.verified
+
+    if @ticket.update(verified: true)
+      success_response('activated')
     else
       render json: { errors: @ticket.errors.full_messages }, status: :unprocessable_entity
     end
@@ -43,6 +56,30 @@ class TicketsController < ApplicationController
 
   def transfer_ticket_params
     params.permit(:user_id, :id)
+  end
+
+  def validate_ticket_params
+    params.permit(:user_id, :id, :event_id, :type)
+  end
+
+  def error_response(string)
+    render json: { error: error_message(string) }, status: :unprocessable_entity
+  end
+
+  def error_message(key)
+    message_hash = { 'not_included': "Le ticket ne fait pas partie de la liste des tickets de l'évènement en cours.",
+                     'already_validated': 'Le ticket a déjà été validé' }
+    message_hash[key.to_sym]
+  end
+
+  def success_response(string)
+    render json: { message: success_message(string) }, status: :ok
+  end
+
+  def success_message(key)
+    message_hash = { 'activated': 'Le ticket a bien été activé.',
+                     'already_validated': 'Le ticket a déjà été validé' }
+    message_hash[key.to_sym]
   end
 
   def update_success_response
