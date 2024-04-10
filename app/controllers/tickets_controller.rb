@@ -54,13 +54,13 @@ class TicketsController < ApplicationController
     params.permit(:type, :description, :price, :verified, :user_id, :event_id, :qr_code_url, :id)
   end
 
-  def transfer_ticket_params
-    params.permit(:user_id, :id)
-  end
+  # def transfer_ticket_params
+  #   params.permit(:user_id, :id)
+  # end
 
-  def validate_ticket_params
-    params.permit(:user_id, :id, :event_id, :type)
-  end
+  # def validate_ticket_params
+  #   params.permit(:user_id, :id, :event_id, :type)
+  # end
 
   def error_response(string)
     render json: { error: error_message(string) }, status: :unprocessable_entity
