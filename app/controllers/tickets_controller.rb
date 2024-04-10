@@ -36,7 +36,7 @@ class TicketsController < ApplicationController
   end
 
   def validate_ticket
-    @ticket = Ticket.find(id: params[:id])
+    @ticket = Ticket.find(params[:id])
     @event_ticket_list = Event.find(params[:event_id]).tickets
     return error_response('not_included') unless @event_ticket_list.include?(@ticket)
     return error_response('already_validated') if @ticket.verified
